@@ -9,18 +9,17 @@ Bu araç, kuantum kimyasal hesaplamalarda sıklıkla kullanılan Yoğunluk Fonks
 🌟 Özellikler
 
 
+* **HOMO ve LUMO Enerji Girişi:** Molekülün Yüksek Dolu Moleküler Orbital (HOMO) ve En Düşük Boş Moleküler Orbital (LUMO) enerji değerlerini girerek hesaplama yapma imkanı.
 
-HOMO ve LUMO Enerji Girişi: Molekülün Yüksek Dolu Moleküler Orbital (HOMO) ve En Düşük Boş Moleküler Orbital (LUMO) enerji değerlerini girerek hesaplama yapma imkanı.
+* **Birim Seçeneği:** Enerji birimini Elektronvolt (eV) veya Hartree olarak seçebilme ve otomatik dönüştürme özelliği.
 
-Birim Seçeneği: Enerji birimini Elektronvolt (eV) veya Hartree olarak seçebilme ve otomatik dönüştürme özelliği.
+* **Temel Reaktivite Parametreleri:** Molekülün temel reaktivite tanımlayıcılarını hızlıca hesaplar.
 
-Temel Reaktivite Parametreleri: Molekülün temel reaktivite tanımlayıcılarını hızlıca hesaplar.
+* **Kullanılan Formüller:** Hesaplamalarda kullanılan Koopmans yaklaşımı ve C-DFT formülleri açıkça belirtilmiştir.
 
-Kullanılan Formüller: Hesaplamalarda kullanılan Koopmans yaklaşımı ve C-DFT formülleri açıkça belirtilmiştir.
+* **Parametre Açıklamaları:** Hesaplanan her bir özelliğin (Kimyasal Potansiyel, Sertlik vb.) kimyasal anlamı hakkında kısa açıklamalar mevcuttur.
 
-Parametre Açıklamaları: Hesaplanan her bir özelliğin (Kimyasal Potansiyel, Sertlik vb.) kimyasal anlamı hakkında kısa açıklamalar mevcuttur.
-
-Responsive Tasarım: Mobil ve masaüstü cihazlarda kullanıma uygun modern ve temiz arayüz.
+* **Responsive Tasarım:** Mobil ve masaüstü cihazlarda kullanıma uygun modern ve temiz arayüz.
 
 
 
@@ -38,38 +37,27 @@ Girdiler
 Aracın çalışması için sadece iki temel bilgi gereklidir:
 
 
-1\.  $E\_{\\text{HOMO}}$: En Yüksek Dolu Moleküler Orbital Enerjisi.
+1.  $E\_{\\text{HOMO}}$: En Yüksek Dolu Moleküler Orbital Enerjisi.
 
-2\.  $E\_{\\text{LUMO}}$: En Düşük Boş Moleküler Orbital Enerjisi.
+2.  $E\_{\\text{LUMO}}$: En Düşük Boş Moleküler Orbital Enerjisi.
 
 
 
-\### Kullanılan Temel Formüller
-
+Kullanılan Temel Formüller
 
 
 Moleküler reaktivite özellikleri, Koopmans yaklaşımı kullanılarak aşağıdaki şekilde hesaplanır:
 
 
-
 | Parametre | Formül | Açıklama |
-
-
-
+| :--- | :--- | :--- |
 | İyonlaşma Enerjisi ($I$) | $$I \\approx -E\_{\\text{HOMO}}$$ | Elektron verme eğilimi. |
-
 | Elektron İlgisi ($A$) | $$A \\approx -E\_{\\text{LUMO}}$$ | Elektron alma eğilimi. |
-
 | Kimyasal Potansiyel ($\\mu$) | $$\\mu = \\frac{E\_{\\text{HOMO}} + E\_{\\text{LUMO}}}{2}$$ | Elektron transferi eğilimi. |
-
 | Kimyasal Sertlik ($\\eta$) | $$\\eta = \\frac{E\_{\\text{LUMO}} - E\_{\\text{HOMO}}}{2}$$ | Elektron sayısındaki değişime direnç. |
-
 | Kimyasal Yumuşaklık ($S$) | $$S = \\frac{1}{\\eta}$$ | Yüksek reaktivite ile ilişkilidir. |
-
 | Elektronegatiflik ($\\chi$) | $$\\chi = -\\mu$$ | Elektronları çekme gücü. |
-
 | Elektrofiliklik İndeksi ($\\omega$) | $$\\omega = \\frac{\\mu^2}{2\\eta}$$ | Elektrofilik gücün ölçüsü. |
-
 
 
 > Not:Tüm hesaplamalar dahili olarak Elektronvolt (eV) birimine dönüştürülerek yapılır ve sonuçlar eV cinsinden sunulur.
@@ -88,7 +76,7 @@ Moleküler reaktivite özellikleri, Koopmans yaklaşımı kullanılarak aşağı
 
 4\.  Giriş birimini (eV veya Hartree) seçin.
 
-5\.  "Reaktivite Özelliklerini Hesapla" butonuna tıklayın.
+5\.  "**Reaktivite Özelliklerini Hesapla**" butonuna tıklayın.
 
 
 
@@ -100,6 +88,5 @@ Anında sonuçlar, açıklayıcı başlıklar ve birimlerle birlikte eV cinsinde
 
 
 
-👨‍💻 Geliştirici: Emre Can Buluz (In Silico Design)
-
+👨‍💻 **Geliştirici:** Emre Can Buluz (In Silico Design)
 
