@@ -1,4 +1,4 @@
-\# ⚛️ C-DFT Reaktivite Tanımlayıcıları Hesaplama Aracı
+⚛️ C-DFT Reaktivite Tanımlayıcıları Hesaplama Aracı
 
 
 
@@ -100,5 +100,6 @@ Anında sonuçlar, açıklayıcı başlıklar ve birimlerle birlikte eV cinsinde
 
 
 
-👨‍💻 \*\*Geliştirici:\*\* Emre Can Buluz (In Silico Design)
+👨‍💻 Geliştirici: Emre Can Buluz (In Silico Design)
+
 
