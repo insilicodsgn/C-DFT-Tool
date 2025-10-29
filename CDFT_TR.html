@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C-DFT Reaktivite Analizi - HOMO/LUMO Hesaplayıcı</title>
+    <script type="text/javascript" async
+      src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+        });
+    </script>
+    <style>
+        :root {
+            /* Renk Paleti */
+            --color-blue: #007bff;
+            --color-yellow: #ffc107;
+            --color-green: #28a745;
+            --color-dark-blue: #0056b3;
+            --color-light-gray: #f8f9fa;
+            --color-white: #ffffff;
+            --color-text: #343a40;
+            --color-black: #000000;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 10px; /* Mobil cihazlarda daha az boşluk */
+            background: linear-gradient(135deg, var(--color-light-gray) 0%, var(--color-white) 100%);
+            color: var(--color-text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            background: var(--color-white);
+            padding: 20px; /* Mobil cihazlarda daha az boşluk */
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: var(--color-dark-blue);
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 3px solid var(--color-yellow);
+            padding-bottom: 10px;
+        }
+
+        .section-title {
+            color: var(--color-green);
+            border-left: 5px solid var(--color-blue);
+            padding-left: 10px;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .calculator-area {
+            display: flex;
+            flex-wrap: wrap; /* Mobil için kutuların alt alta gelmesini sağlar */
+            gap: 20px;
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid var(--color-blue);
+            border-radius: 10px;
+            background-color: #f0f8ff;
+        }
+
+        .input-group, .output-group {
+            flex: 1;
+            min-width: 100%; /* Mobil cihazlarda tam genişlik */
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .input-group {
+            background-color: var(--color-white);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--color-dark-blue);
+        }
+
+        input[type="number"], select {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 2px solid var(--color-yellow);
+            border-radius: 5px;
+            font-size: 1em;
+        }
+
+        button {
+            background-color: var(--color-green);
+            color: var(--color-white);
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background-color 0.3s, transform 0.1s;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: var(--color-dark-blue);
+            transform: translateY(-2px);
+        }
+
+        .output-group {
+            background-color: var(--color-blue);
+            color: var(--color-white);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .result-item {
+            margin-bottom: 10px;
+            padding: 8px;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.5);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-value {
+            font-weight: bold;
+            color: var(--color-yellow);
+        }
+
+        .info-area {
+            display: flex;
+            flex-wrap: wrap; /* Mobil için kutuların alt alta gelmesini sağlar */
+            gap: 20px;
+        }
+
+        .descriptions, .formulas {
+            flex: 1;
+            min-width: 100%; /* Mobil cihazlarda tam genişlik */
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .descriptions {
+            background-color: #e6f7ff;
+        }
+
+        .formulas {
+            background-color: #f0fff4;
+            border: 1px solid var(--color-green);
+        }
+        
+        .formula-list p {
+            margin-bottom: 15px;
+            padding: 5px;
+            border-left: 3px solid var(--color-yellow);
+        }
+
+        .math-formula {
+            display: block;
+            margin: 10px 0;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: var(--color-dark-blue);
+            overflow-x: auto;
+            text-align: center;
+        }
+
+        .footer {
+            max-width: 600px;
+            margin: 10px auto;
+            text-align: center;
+            padding: 15px 20px;
+            font-size: 1em;
+            color: var(--color-black);
+            border-top: 3px solid var(--color-green);
+            background-color: var(--color-yellow);
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .footer strong {
+            color: var(--color-black);
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+        
+        /* MASAÜSTÜ İÇİN AYARLAR (768px üzeri) */
+        @media (min-width: 768px) {
+            /* Flexbox kutularını yan yana getir */
+            .input-group, .output-group {
+                min-width: 300px; /* Orijinal masaüstü min genişliği */
+            }
+
+            .descriptions, .formulas {
+                min-width: 45%; /* Orijinal masaüstü min genişliği */
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>C-DFT Reaktivite Tanımlayıcıları Hesaplama Aracı</h1>
+    <p style="text-align: center; color: var(--color-dark-blue);">
+        HOMO ve LUMO Enerji Değerlerinden Reaktivite Tanımlayıcılarını Hesaplama Aracı
+    </p>
+
+    <div class="calculator-area">
+        <div class="input-group">
+            <h2 class="section-title">Enerji Değerleri</h2>
+            <label for="homo">$E_{\text{HOMO}}$ :</label>
+            <input type="tel" id="homo" placeholder="Örn: -5.0" step="any" required>
+
+            <label for="lumo">$E_{\text{LUMO}}$ :</label>
+            <input type="tel" id="lumo" placeholder="Örn: -2.0" step="any" required>
+    
+            <label for="unit">Enerji Birimi:</label>
+            <select id="unit">
+                <option value="eV">Elektronvolt (eV)</option>
+                <option value="Hartree">Hartree</option>
+            </select>
+
+            <button onclick="hesapla()">Reaktivite Özelliklerini Hesapla</button>
+        </div>
+
+        <div class="output-group">
+            <h2 class="section-title" style="color: var(--color-yellow);">Hesaplanan Özellikler (eV)</h2>
+            <div id="sonuclar">
+                <p style="text-align: center; margin-top: 50px;">Lütfen $E_{\text{HOMO}}$ ve $E_{\text{LUMO}}$ değerlerini girip "Hesapla" butonuna tıklayınız.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="info-area">
+        <div class="descriptions">
+            <h2 class="section-title">Reaktivite Özellikleri ve Anlamları</h2>
+            
+            <p><strong>İyonlaşma Enerjisi ($I$):</strong> Molekülden bir elektron koparmak için gereken enerji. Ne kadar düşükse, molekül o kadar kolay elektron verir (nükleofillik).</p>
+            
+            <p><strong>Elektron İlgisi ($A$):</strong> Molekülün bir elektronu kabul etme eğilimi. Ne kadar yüksekse, molekül o kadar kolay elektron alır (elektrofillik).</p>
+
+            <p><strong>Kimyasal Potansiyel ($\mu$):</strong> Elektron transferi için eğilimin bir ölçüsüdür. Negatifliği, elektron alma eğilimini gösterir.</p>
+            
+            <p><strong>Elektronegatiflik ($\chi$):</strong> Bir atomun/molekülün elektronları kendine çekme gücünün ölçüsüdür. Kimyasal potansiyelin negatifine eşittir ($\chi = -\mu$).</p>
+            
+            <p><strong>Kimyasal Sertlik ($\eta$):</strong> Elektron sayısındaki değişime karşı molekülün direncinin ölçüsüdür. Yüksek sertlik, düşük reaktivite (yüksek kararlılık) anlamına gelir.</p>
+            
+            <p><strong>Kimyasal Yumuşaklık ($S$):</strong> Sertliğin tersidir ($S = 1/\eta$). Yüksek yumuşaklık, yüksek reaktivite anlamına gelir.</p>
+            
+            <p><strong>Elektrofiliklik İndeksi ($\omega_1$):</strong> Bir molekülün elektron alma (elektrofilik) gücünü ve kararlılığını ölçer. Yüksek $\omega_1$, molekülün güçlü bir elektrofil olduğunu gösterir.</p>
+
+        </div>
+
+        <div class="formulas">
+            <h2 class="section-title">Kullanılan Formüller</h2>
+            <div class="formula-list">
+                <p><strong>Koopmans Yaklaşımı:</strong><br>
+                İyonlaşma Enerjisi ($I$): <span class="math-formula">$$I \approx -E_{\text{HOMO}}$$</span>
+                Elektron İlgisi ($A$): <span class="math-formula">$$A \approx -E_{\text{LUMO}}$$</span></p>
+
+                <p><strong>Kimyasal Potansiyel ($\mu$) / Elektronegatiflik ($\chi$):</strong><br>
+                <span class="math-formula">$$\mu = -\chi = \frac{E_{\text{HOMO}} + E_{\text{LUMO}}}{2}$$</span></p>
+
+                <p><strong>Kimyasal Sertlik ($\eta$):</strong><br>
+                <span class="math-formula">$$\eta = \frac{I - A}{2} = \frac{E_{\text{LUMO}} - E_{\text{HOMO}}}{2}$$</span></p>
+                
+                <p><strong>Kimyasal Yumuşaklık ($S$):</strong><br>
+                <span class="math-formula">$$S = \frac{1}{\eta}$$</span></p>
+
+                <p><strong>Elektrofiliklik İndeksi ($\omega_1$):</strong><br>
+                <span class="math-formula">$$\omega_1 = \frac{\mu^2}{2\eta}$$</span></p>
+                
+            </div>
+        </div>
+    </div>
+
+</div> 
+
+<footer class="footer">
+    <strong>In Silico Design - Emre Can Buluz tarafından yapılmıştır.</strong>
+</footer>
+
+<script>
+    // Hartree'den eV'a dönüşüm sabiti (yaklaşık)
+    const HARTREE_TO_EV = 27.2114;
+
+    function hesapla() {
+        const homoInput = document.getElementById('homo');
+        const lumoInput = document.getElementById('lumo');
+        const unitSelect = document.getElementById('unit');
+        const sonuclarDiv = document.getElementById('sonuclar');
+
+        const homoValue = parseFloat(homoInput.value);
+        const lumoValue = parseFloat(lumoInput.value);
+        const unit = unitSelect.value;
+
+        if (isNaN(homoValue) || isNaN(lumoValue)) {
+            sonuclarDiv.innerHTML = '<p style="text-align: center; color: var(--color-yellow);">Lütfen geçerli sayısal HOMO ve LUMO değerleri girin.</p>';
+            return;
+        }
+
+        let E_HOMO = homoValue;
+        let E_LUMO = lumoValue;
+
+        // Birim Dönüşümü: Hartree ise eV'a çevir
+        if (unit === 'Hartree') {
+            E_HOMO = homoValue * HARTREE_TO_EV;
+            E_LUMO = lumoValue * HARTREE_TO_EV;
+        }
+        
+        // E_LUMO < E_HOMO kontrolü
+        if (E_LUMO <= E_HOMO) {
+             sonuclarDiv.innerHTML = '<p style="text-align: center; color: var(--color-yellow);">LUMO enerjisi, HOMO enerjisinden daha büyük olmalıdır. Lütfen değerleri kontrol edin.</p>';
+             return;
+        }
+        
+        // **C-DFT Hesaplamaları (eV cinsinden)**
+        const I = -E_HOMO;
+        const A = -E_LUMO;
+        const mu = (E_HOMO + E_LUMO) / 2;
+        const chi = -mu;
+        const eta = (E_LUMO - E_HOMO) / 2;
+        const S = 1 / (eta);
+        const omega1 = (mu * mu) / (2 * eta);
+        
+        // İkinci elektrofiliklik indisi kaldırıldığı için sadece tek omega1 gösteriliyor.
+
+        // Sonuçları HTML'e Yazdırma (MathJax ile en kompakt gösterim)
+        const resultsHTML = `
+            <div class="result-item">İyonlaşma Enerjisi $\\left(I\\right)$: <span class="result-value">${I.toFixed(4)} eV</span></div>
+            <div class="result-item">Elektron İlgisi $\\left(A\\right)$: <span class="result-value">${A.toFixed(4)} eV</span></div>
+            <div class="result-item">Kimyasal Potansiyel $\\left(\\mu\\right)$: <span class="result-value">${mu.toFixed(4)} eV</span></div>
+            <div class="result-item">Elektronegatiflik $\\left(\\chi\\right)$: <span class="result-value">${chi.toFixed(4)} eV</span></div>
+            <div class="result-item">Kimyasal Sertlik $\\left(\\eta\\right)$: <span class="result-value">${eta.toFixed(4)} eV</span></div>
+            <div class="result-item">Kimyasal Yumuşaklık $\\left(S\\right)$: <span class="result-value">${S.toFixed(4)} $\\text{eV}^{-1}$</span></div>
+            <div class="result-item">Elektrofiliklik $\\left(\\omega\\right)$: <span class="result-value">${omega1.toFixed(4)} eV</span></div>
+            <div class="result-item" style="border-bottom: none;">HOMO-LUMO Aralığı $\\left(\\Delta E\\right)$: <span class="result-value">${((E_LUMO - E_HOMO)).toFixed(4)} eV</span></div>
+        `;
+        
+        sonuclarDiv.innerHTML = resultsHTML;
+
+        // MathJax'e, 'sonuclarDiv' içeriğinin değiştiğini ve yeniden işlenmesi gerektiğini bildiriyoruz.
+        MathJax.Hub.Queue(["Typeset", MathJax.Hub, "sonuclar"]);
+    }
+</script>
+
+</body>
+</html>
